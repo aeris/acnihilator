@@ -5,14 +5,19 @@ complaint sending to national DPA
 
 ## Requirement
 
-Ruby 3 or later
-Chrome headless (used by Selenium)
+This tool requires:
+- [Ruby 3 or later](https://www.ruby-lang.org/)
+- [Bundler](https://bundler.io/)
+- [Chrome headless](https://github.com/ungoogled-software/ungoogled-chromium#downloads)
+- [geoipupdate](https://github.com/maxmind/geoipupdate)
 
 Software released under [AGPLv3+](https://www.gnu.org/licenses/agpl-3.0.html) license
 
 ## Setup
 
-Get a GeoIP MaxMind free license [https://www.maxmind.com/en/account/login](here).
+To work this tool need GeoIP informations. You can get them from [maxmind](https://www.maxmind.com/). Create a free account, go to "My Account", "Manage License Keys" and create a new one.
+
+Store this key in the file `~/.config/GeoIP.conf`:
 
 ```bash
 $ cat > ~/.config/GeoIP.conf <EOF
@@ -20,8 +25,13 @@ AccountID <MaxMind account ID>
 LicenseKey <MaxMind license key>
 EditionIDs GeoLite2-ASN GeoLite2-City GeoLite2-Country
 EOF
-$ bundle install
-$ bundle exec rake
+```
+
+Now you can install all dependencies and download required files (geoip and easyprivacy list):
+
+```bash
+bundle install   # Install dependencies
+bundle exec rake # Download geoip and easyprivacy list
 ```
 
 ## Usage
@@ -32,7 +42,7 @@ $ bundle exec ./acnihilator <url of the website to test>
 
 ## Under the hood
 
-This script uses [Selenium][https://www.selenium.dev/] with a headless browser
+This script uses [Selenium](https://www.selenium.dev/) with a headless browser
 to intercept all HTTP requests done on a given website.
 
 From this collection, it tries to detect GDPR violation:
