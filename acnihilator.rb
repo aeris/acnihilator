@@ -13,9 +13,6 @@ require 'ruby_jard'
 
 require './adblock'
 
-ADBLOCK = AdBlock.new
-ADBLOCK.import 'easyprivacy.list'
-
 options = Selenium::WebDriver::Chrome::Options.new args: %w[--headless], local_state: {
   "dns_over_https.mode":      "secure",
   "dns_over_https.templates": "https://ns0.fdn.fr/dns-query",
@@ -38,8 +35,16 @@ end
 puts 'Done'.colorize :green
 
 puts 'Analyzing urls...'.colorize :yellow
+
+ADBLOCK = AdBlock.from 'easyprivacy.list'
+
+FORBIDDEN = AdBlock.from 'forbidden.list'
+
 urls.each do |url|
-  if match = ADBLOCK.match?(url)
+  if match = FORBIDDEN.match?(url)
+    puts "  #{url.colorize background: :red}"
+    match.each { puts "    #{_1.to_s.colorize :yellow}" }
+  elsif match = ADBLOCK.match?(url)
     puts "  #{url.colorize(:red)}"
     match.each { puts "    #{_1.to_s.colorize :yellow}" }
   else
@@ -60,16 +65,14 @@ GEOIP    = MaxMind::GeoIP2::Reader.new database: 'GeoLite2-Country.mmdb'
 WHOIS    = Whois::Client.new
 
 ORGANIZATIONS     = /(?:role|Organization|contact|OrgName):\s*(.*)$/.freeze
-BAD_ORGANIZATIONS = %w[
-  google amazon cloudflare cloudfront fastly
-]
+BAD_ORGANIZATIONS = IO.foreach('organizations.list').collect &:chomp
 
 def organizations(entry)
   WHOIS.lookup(entry).to_s
        .scan(ORGANIZATIONS)
        .collect do |organization|
     organization = organization.first.chomp
-    organization = organization.colorize :red if BAD_ORGANIZATIONS.any? { organization.downcase.include? _1 }
+    organization = organization.colorize background: :red if BAD_ORGANIZATIONS.any? { organization.downcase.include? _1 }
     organization
   end
 rescue Timeout::Error
@@ -78,7 +81,7 @@ end
 
 def country(ip)
   country = GEOIP.country(ip)&.country.iso_code
-  country.colorize country == 'US' ? :red : :yellow
+  country.colorize country == 'US' ? { background: :red } : :yellow
 end
 
 def emoji_flag(country_code)

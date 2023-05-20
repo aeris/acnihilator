@@ -28,6 +28,7 @@ class AdBlock
     end
 
     def match?(url)
+      return false if @options
       url   = URI(url).host if @domain
       match = @rule.match url
       return match ? :exception : false if @exception
@@ -59,5 +60,11 @@ class AdBlock
 
   def import(file)
     IO.foreach(file) { self << _1 }
+  end
+
+  def self.from(file)
+    list = self.new
+    list.import file
+    list
   end
 end
