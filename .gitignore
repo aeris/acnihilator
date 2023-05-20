@@ -1,0 +1,7 @@
+*.mmdb
+*.list
+*.iml
+.geoipupdate.lock
+
+/.bundle/
+/bin/
