@@ -8,11 +8,13 @@ complaint sending to national DPA
 Ruby 3 or later
 Chrome headless (used by Selenium)
 
-Software released under [AGPLv3+](https://www.gnu.org/licenses/agpl-3.0.html) license
+Software released under [AGPLv3+](https://www.gnu.org/licenses/agpl-3.0.html)
+license
 
 ## Setup
 
-Get a GeoIP MaxMind free license [https://www.maxmind.com/en/account/login](here).
+Get a GeoIP MaxMind free
+license [https://www.maxmind.com/en/account/login](here).
 
 ```bash
 $ cat > ~/.config/GeoIP.conf <EOF
@@ -27,7 +29,7 @@ $ bundle exec rake
 ## Usage
 
 ```bash
-$ bundle exec ./acnihilator <url of the website to test>
+$ bundle exec ./bin/acnihilator inspect <url of the website to test>
 ```
 
 ## Under the hood
@@ -37,10 +39,12 @@ to intercept all HTTP requests done on a given website.
 
 From this collection, it tries to detect GDPR violation:
 
-  - Usage of US services, violating [Schrems II CJEU decision](https://curia.europa.eu/juris/liste.jsf?num=C-311/18)
+- Usage of US services, violating
+  [Schrems II CJEU decision](https://curia.europa.eu/juris/liste.jsf?num=C-311/18)
     - GeoIP database for IP country location
     - Whois service for organization identification
-  
-  - Deposit of identifying cookies without consent
 
-  - Usage of prohibited services like reCaptcha, hCaptcha, Cloudflare, Stripe, Mailchimp…
+- Deposit of identifying cookies without consent
+
+- Usage of prohibited services like reCaptcha, hCaptcha, Cloudflare, Stripe,
+  Mailchimp…

@@ -4,4 +4,4 @@
 .geoipupdate.lock
 
 /.bundle/
-/bin/
+/reports/

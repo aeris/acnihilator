@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+require 'thor'
+require 'ruby_jard'
+require './acnihilator'
+
+class App < Thor
+  def self.exit_on_failure?
+    true
+  end
+
+  desc 'inspect URL', 'Inspect site at given URL'
+  option :wait, aliases: :w, default: 10, type: :numeric
+
+  def inspect(url)
+    Acnihilator.new url, wait = options[:wait]
+  end
+end
+
+App.start ARGV

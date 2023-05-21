@@ -1,0 +1,59 @@
+# [ filter, tag...]
+:adblock:
+  - [ "||.googleapis.com|", us, google, cdn ]
+  - [ "||.gstatic.com|", us, google, cdn ]
+  - [ "|||google.com|", us, google ]
+  - [ "||.google.com|", us, google ]
+  - [ "||.googletagmanager.com|", tracking, us, google ]
+  - [ "||.googletagservices.com|", tracking, us, google ]
+  - [ "||.doubleclick.net|", tracking, us, google ]
+  - [ "||.googlesyndication.com|", tracking, us, google ]
+  - [ "||fonts.gstatic.com|", us, google, google-fonts ]
+  - [ "||fonts.googleapis.com|", us, google, google-fonts, cdn ]
+  - [ /recaptcha/, us, google, recaptcha ]
+  - [ '||.youtube.com|', us, google, youtube ]
+  - [ '||.ytimg.com|', us, google, youtube ]
+
+  - [ '||.cloudfront.net|', us, amazon, cdn ]
+  - [ '||.amazonaws.com|', us, amazon ]
+  - [ '||.amazon-adsystem.com|', tracking, us, amazon ]
+
+  - [ '||.cloudflare.net|', us, cloudflare ]
+  - [ '||.cloudflareinsights.com|', us, cloudflare ]
+  - [ '|||cdnjs.cloudflare.com|', us, cloudflare, cdn ]
+
+  - [ '||fastly.net|', us, fastly, cdn ]
+  - [ '||.akamaized.net|', us, akamai, cdn ]
+  - [ '||.akamai.net|', us, akamai, cdn ]
+  - [ '||.edgesuite.net|', us, akama, cdn ]
+  - [ '||.edgecastcdn.net|', us, edgecast, cdn ]
+
+  - [ '||twitter.com|', us, twitter ]
+  - [ '||twimg.com|', us, twitter ]
+
+  - [ '||.facebook.net|', us, facebook ]
+  - [ '||.facebook.com|', us, facebook ]
+
+  - [ '||.licdn.com|', us, microsoft, linkedin ]
+
+  - [ '||.jquery.com|', us, cdn ]
+  - [ '||.typekit.net|', us, cdn ]
+  - [ '||unpkg.com|', us, cdn ]
+  - [ '||.bootstrapcdn.com|', us, cdn ]
+
+  - [ '||newrelic.com|', tracking, us ]
+  - [ '||trafficmanager.net|', tracking, us ]
+
+  - [ /hcaptcha/, us, hcaptcha ]
+
+:organizations:
+  - [ google, us, google ]
+  - [ amazon, us, amazon ]
+  - [ aws, us, amazon ]
+  - [ akamai, us, akamai ]
+  - [ microsoft, us, microsoft ]
+  - [ fastly, us, fastly, cdn ]
+  - [ edgecast, us, edgecast, cdn ]
+
+:countries:
+  - US

@@ -22,3 +22,5 @@ gem "ruby_jard", "~> 0.3.1", :group => :development
 gem "selenium-devtools", "~> 0.113.0"
 
 gem "rspec", "~> 3.12", :group => :development
+
+gem "thor", "~> 1.2"
