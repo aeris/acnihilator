@@ -10,6 +10,7 @@
   - [ "||.googlesyndication.com|", tracking, us, google ]
   - [ "||fonts.gstatic.com|", us, google, google-fonts ]
   - [ "||fonts.googleapis.com|", us, google, google-fonts, cdn ]
+  - [ "||google-analytics.com|", us, google, google-analytics ]
   - [ /recaptcha/, us, google, recaptcha ]
   - [ '||.youtube.com|', us, google, youtube ]
   - [ '||.ytimg.com|', us, google, youtube ]

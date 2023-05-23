@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 require 'thor'
-require 'ruby_jard'
+require 'uri'
 require './acnihilator'
+require './acnihilator/case'
 
 class App < Thor
   def self.exit_on_failure?
@@ -13,6 +14,15 @@ class App < Thor
 
   def inspect(url)
     Acnihilator.new url, wait = options[:wait]
+  end
+
+  desc 'case URL', 'Generate DPA case from file report'
+
+  def case(url)
+    url   = URI url
+    file  = File.join 'reports', url.host + "@" + url.path.gsub('/', '_') + '.json'
+    case_ = Acnihilator::Case.new file
+    puts case_.to_s
   end
 end
 

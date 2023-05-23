@@ -73,7 +73,7 @@ class Acnihilator
           LOGGER.error "  #{url.colorize :red}:"
           match = match.collect &:to_s
           match.each { LOGGER.error "    #{_1}" }
-          @violations.urls << [url, { match: :adblock }]
+          @violations.urls << [url, match.collect { [_1, :tracking] }.to_h]
           @violations.tags << :tracking
         end
 
@@ -151,7 +151,7 @@ class Acnihilator
         match            = match.collect { [_1.first.to_s, _1.last] }.to_h
         [organisation, match]
       end.to_h
-      @violations.organizations << { chain.join(' > ') => match }
+      @violations.organizations << [chain.join(' > '), match]
     end
   end
 
@@ -183,8 +183,8 @@ class Acnihilator
       cookies:    @cookies,
       violations: {
         tags:          @violations.tags.to_a,
-        urls:          @violations.urls,
-        organizations: @violations.organizations,
+        urls:          @violations.urls.to_h,
+        organizations: @violations.organizations.to_h,
         cookies:       @violations.cookies
       }
     }
