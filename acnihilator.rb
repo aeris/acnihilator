@@ -20,7 +20,7 @@ class Acnihilator
   OPTIONS    = Selenium::WebDriver::Chrome::Options.new local_state: {
     "dns_over_https.mode":      'secure',
     "dns_over_https.templates": "https://#{DNS}/dns-query",
-  }, args:                                                           %W[--headless --user-agent=#{USER_AGENT}]
+  }, args:                                                           %W[--no-sandbox --headless --user-agent=#{USER_AGENT}]
 
   ADBLOCK           = AdBlock.from 'easyprivacy.list'
   CONFIG            = YAML.load_file 'config.yaml'
