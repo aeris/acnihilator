@@ -32,6 +32,22 @@ $ bundle exec rake
 $ bundle exec ./bin/acnihilator inspect <url of the website to test>
 ```
 
+## Dockerized version
+
+In a blank folder, put the GeoIP.conf file as described above with your MaxMind credentials.
+
+Then within this folder, run the following command, replacing the last part with the full URL of the website you want to test :
+```bash
+$ docker run -v ./GeoIP.conf:/Rails-Docker/.config/GeoIP.conf -v ./reports/:/Rails-Docker/reports ghcr.io/sharkoz/acnihilator:master /bin/sh -c "bundle exec rake ; bundle exec ./bin/acnihilator inspect <url of the website to test>"
+```
+Results are visible in the "results" folder created by the script.
+
+Or clone only the "run.sh" file of this repository, make it executable and run it like that :
+```bash
+$ chmod +x run.sh
+$ ./run.sh https://www.ssi.gouv.fr
+```
+
 ## Under the hood
 
 This script uses [Selenium](https://www.selenium.dev/) with a headless browser
