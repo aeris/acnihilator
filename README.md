@@ -32,6 +32,25 @@ $ bundle exec rake
 $ bundle exec ./bin/acnihilator inspect <url of the website to test>
 ```
 
+## Dockerized version
+
+To avoid installing ruby environment, you can use Docker to build an image
+directly usable:
+
+```bash
+  docker build .
+```
+
+A pre-build version is provided on [Docker Hub](https://hub.docker.com/r/aeris22/acnihilator).
+(Publishing MaxMind geoip database is not allowed, so you need to have one on your
+host computer and to volume-mount it on the running container, so the `-v` usage.)
+
+
+```bash
+  docker run --rm -it -v ./GeoLite2-Country.mmdb:/app/GeoLite2-Country.mmdb \
+    aeris22/acnihilator inspect --no-save https://imirhil.fr/
+```
+
 ## Under the hood
 
 This script uses [Selenium](https://www.selenium.dev/) with a headless browser

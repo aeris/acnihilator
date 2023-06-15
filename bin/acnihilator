@@ -6,7 +6,7 @@ require './acnihilator'
 require './acnihilator/analysis'
 require './acnihilator/case'
 
-Mongoid.load! 'mongoid.yml', :development
+Mongoid.load! 'mongoid.yml', :development if File.exist? 'mongoid.yml'
 
 class App < Thor
   def self.exit_on_failure?
