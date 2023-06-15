@@ -1,0 +1,1 @@
+docker run -v ./GeoIP.conf:/Rails-Docker/.config/GeoIP.conf -v ./reports/:/Rails-Docker/reports ghcr.io/sharkoz/acnihilator:master /bin/sh -c "bundle exec rake ; bundle exec ./bin/acnihilator inspect $1"
