@@ -60,9 +60,7 @@ class Acnihilator
         LOGGER.info "  #{@cookies.size.to_s.colorize :blue} cookies collected"
       end
       self.process 'Take screenshot' do
-        screenshot = @report + '.png'
-        driver.save_screenshot screenshot
-        LOGGER.info "  Screenshot saved at `#{screenshot}`"
+        @screenshot = driver.screenshot_as :png, full_page: false
       end
     end
 
@@ -100,8 +98,23 @@ class Acnihilator
         LOGGER.info "  #{name.colorize :blue}: #{cookie[:value]}"
       end
     end
+  end
 
-    File.write @report + '.json', JSON.pretty_generate(self.to_h)
+  def to_h
+    {
+      url:        @url,
+      date:       DateTime.now,
+      urls:       @urls,
+      domains:    @domains,
+      cookies:    @cookies,
+      violations: {
+        tags:          @violations.tags.to_a,
+        urls:          @violations.urls.to_h,
+        organizations: @violations.organizations.to_h,
+        cookies:       @violations.cookies
+      },
+      screenshot: @screenshot
+    }
   end
 
   private
@@ -172,21 +185,5 @@ class Acnihilator
         self.resolve *chain, domain
       end
     end
-  end
-
-  def to_h
-    {
-      date:       DateTime.now,
-      url:        @url,
-      urls:       @urls,
-      domains:    @domains,
-      cookies:    @cookies,
-      violations: {
-        tags:          @violations.tags.to_a,
-        urls:          @violations.urls.to_h,
-        organizations: @violations.organizations.to_h,
-        cookies:       @violations.cookies
-      }
-    }
   end
 end

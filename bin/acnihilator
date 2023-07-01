@@ -1,8 +1,12 @@
 #!/usr/bin/env ruby
 require 'thor'
 require 'uri'
+require 'mongoid'
 require './acnihilator'
+require './acnihilator/analysis'
 require './acnihilator/case'
+
+Mongoid.load! 'mongoid.yml', :development
 
 class App < Thor
   def self.exit_on_failure?
@@ -10,18 +14,19 @@ class App < Thor
   end
 
   desc 'inspect URL', 'Inspect site at given URL'
-  option :wait, aliases: :w, default: 10, type: :numeric
+  option :wait, aliases: :w, type: :numeric, default: 10
+  option :save, aliases: :s, type: :boolean, default: true
 
   def inspect(url)
-    Acnihilator.new url, wait = options[:wait]
+    analysis = Acnihilator.new url, wait = options[:wait]
+    Analysis.create! analysis.to_h if options[:save]
   end
 
   desc 'case URL', 'Generate DPA case from file report'
 
   def case(url)
-    url   = URI url
-    file  = File.join 'reports', url.host + "@" + url.path.gsub('/', '_') + '.json'
-    case_ = Acnihilator::Case.new file
+    analysis = Analysis.find_by url: url
+    case_ = Acnihilator::Case.new analysis
     puts case_.to_s
   end
 end

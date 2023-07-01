@@ -2,9 +2,9 @@ require 'json'
 
 class Acnihilator
   class Case
-    def initialize(file, locale = :fr)
-      @report        = JSON.load_file file
-      @violations    = @report.fetch 'violations'
+    def initialize(analysis, locale = :fr)
+      @analysis = analysis
+      @violations    = @analysis.violations
       @tags          = @violations.fetch 'tags'
       @urls          = @violations.fetch 'urls'
       @organizations = @violations.fetch 'organizations'
@@ -33,7 +33,7 @@ class Acnihilator
     def to_s
       text = [
         'Bonjour,', '',
-        "Suite à la visite du site #{@report.fetch 'url'}, j’ai a priori relevé plusieurs non conformités RGPD."
+        "Suite à la visite du site #{@analysis.url}, j’ai a priori relevé plusieurs non conformités RGPD."
       ]
 
       if us = self.tags('us')
