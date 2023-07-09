@@ -5,49 +5,52 @@ require 'mongoid'
 require './acnihilator'
 require './acnihilator/analysis'
 require './acnihilator/case'
+require './acnihilator/mongo'
 
 Mongoid.load! 'mongoid.yml', :development if File.exist? 'mongoid.yml'
 
-class App < Thor
-  def self.exit_on_failure?
-    true
-  end
+class Acnihilator
+  class App < Thor
+    def self.exit_on_failure?
+      true
+    end
 
-  desc 'inspect URL', 'Inspect site at given URL'
-  option :wait, aliases: :w, type: :numeric, default: 10
-  option :save, aliases: :s, type: :boolean, default: false
-  option :format, aliases: :f, type: :string, enum: %w[mongo text], default: :text
+    desc 'inspect URL', 'Inspect site at given URL'
+    option :wait, aliases: :w, type: :numeric, default: 10
+    option :save, aliases: :s, type: :boolean, default: false
+    option :format, aliases: :f, type: :string, enum: %w[mongo text], default: :text
 
-  def inspect(url)
-    analysis = Acnihilator.new url, wait = options[:wait]
-    if options[:save]
-      puts "Saving report..."
-      data = analysis.to_h
-      case options[:format].to_sym
-      when :text
-        url = data.fetch :url
-        screenshot = data.delete :screenshot
-        host = URI.parse(url).host.to_s
-        hash = Digest::SHA2.hexdigest url
-        basename = "#{host}-#{hash}"
-        json = JSON.pretty_generate data
-        File.write File.join("reports", "#{basename}.json"), json
-        File.write File.join("reports", "#{basename}.png"), screenshot
-        puts "Report ID: #{basename}"
-      when :mongo
-        analysis = Analysis.create! data
-        puts "Mongo ID: #{analysis.id}"
+    def inspect(url)
+      analysis = Acnihilator.selenium url, wait = options[:wait]
+      if options[:save]
+        puts "Saving report..."
+        data = analysis.to_h
+        case options[:format].to_sym
+        when :text
+          url        = data.fetch :url
+          screenshot = data.delete :screenshot
+          host       = URI.parse(url).host.to_s
+          hash       = Digest::SHA2.hexdigest url
+          basename   = "#{host}-#{hash}"
+          json       = JSON.pretty_generate data
+          File.write File.join("reports", "#{basename}.json"), json
+          File.write File.join("reports", "#{basename}.png"), screenshot
+          puts "Report ID: #{basename}"
+        when :mongo
+          analysis = Analysis::Mongoid.create! data
+          puts "Mongo ID: #{analysis.id}"
+        end
       end
     end
-  end
 
-  desc 'case URL', 'Generate DPA case from file report'
+    desc 'case URL', 'Generate DPA case from file report'
 
-  def case(url)
-    analysis = Analysis.find_by url: url
-    case_    = Acnihilator::Case.new analysis
-    puts case_.to_s
+    def case(url)
+      analysis = Analysis::Mongoid.find_by url: url
+      case_    = Case.new analysis
+      puts case_.to_s
+    end
   end
 end
 
-App.start ARGV
+Acnihilator::App.start ARGV
