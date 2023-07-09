@@ -1,4 +1,5 @@
 require './acnihilator/adblock'
+require './acnihilator/cookies'
 require './acnihilator/selenium'
 require './acnihilator/whois'
 require './acnihilator/geoip'
@@ -7,6 +8,7 @@ class Acnihilator
   class Analysis
     CONFIG            = YAML.load_file 'config.yaml'
     ADBLOCK           = AdBlock.from 'easyprivacy.list'
+    COOKIES           = Cookies.new 'cookiedatabase.csv'
     BAD_URLS          = TagAdblock.new CONFIG.fetch :adblock
     BAD_ORGANIZATIONS = TagAdblock.new CONFIG.fetch :organizations
     BAD_COUNTRIES     = CONFIG.fetch :countries
@@ -89,6 +91,10 @@ class Acnihilator
         @cookies.each do |cookie|
           name = cookie[:name]
           LOGGER.info "  #{name.colorize :blue}: #{cookie[:value]}"
+          entry     = Cookies[name]
+          category  = entry.fetch :category
+          violation = category == 'Functional' ? :green : :red
+          LOGGER.info "    #{category.colorize violation} #{entry.fetch(:entity).colorize :yellow} #{entry.fetch :description}"
         end
       end
     end
