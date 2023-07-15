@@ -14,7 +14,7 @@ WORKDIR /app
 
 RUN <<EOF
 	bundle config set deployment true
-	bundle config set without development
+	bundle config set without development rails
 	bundle install
 EOF
 
