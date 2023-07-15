@@ -1,22 +1,15 @@
+require 'shellwords'
+
 class Acnihilator
   class Selenium
     USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
-    OPTIONS    = ::Selenium::WebDriver::Chrome::Options.new local_state: {
-      "dns_over_https.mode":      'secure',
-      "dns_over_https.templates": "https://#{Acnihilator::DNS}/dns-query",
-    }, args:                                                             %W[
-      --headless
-      --no-sandbox
-      --disable-dev-shm-usage
-      --user-agent=#{USER_AGENT}
-                                                                         ]
 
     def initialize(url, wait = 10)
       self.do_in_browser do |driver|
         LOGGER.process 'Collecting urls' do
           @urls = []
           driver.intercept do |request, &continue|
-            @urls << url = request.url
+            @urls << (url = request.url)
             LOGGER.debug '  ' + url if LOGGER.debug?
             continue.call request
           end
@@ -39,8 +32,8 @@ class Acnihilator
 
     def to_h
       {
-        urls:       @urls,
-        cookies:    @cookies,
+        urls: @urls,
+        cookies: @cookies,
         screenshot: @screenshot
       }
     end
@@ -48,7 +41,21 @@ class Acnihilator
     private
 
     def do_in_browser
-      driver = ::Selenium::WebDriver.for :chrome, options: OPTIONS
+      args = %W[
+        --headless
+        --user-agent=#{USER_AGENT}
+      ]
+      if (env_args = ENV['SELENIUM_ARGS'])
+        args += env_args.shellsplit
+      end
+      options = {
+        local_state: {
+          "dns_over_https.mode": 'secure',
+          "dns_over_https.templates": "https://#{Acnihilator::DNS}/dns-query",
+        }, args: args
+      }
+      options = ::Selenium::WebDriver::Chrome::Options.new **options
+      driver = ::Selenium::WebDriver.for :chrome, options: options
       begin
         driver.manage.window.resize_to 1920, 1080
         driver.manage.delete_all_cookies

@@ -2,10 +2,10 @@
 require 'thor'
 require 'uri'
 require 'mongoid'
-require './acnihilator'
-require './acnihilator/analysis'
-require './acnihilator/case'
-require './acnihilator/mongo'
+require './app/lib/acnihilator'
+require './app/lib/acnihilator/analysis'
+require './app/lib/acnihilator/case'
+require './app/lib/acnihilator/mongo'
 
 Mongoid.load! 'mongoid.yml', :development if File.exist? 'mongoid.yml'
 
@@ -44,6 +44,7 @@ class Acnihilator
     end
 
     desc 'case URL', 'Generate DPA case from file report'
+    option :format, aliases: :f, type: :string, enum: %w[mongo text], default: :text
 
     def case(url)
       analysis = Analysis::Mongoid.find_by url: url

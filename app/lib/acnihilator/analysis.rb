@@ -1,8 +1,8 @@
-require './acnihilator/adblock'
-require './acnihilator/cookies'
-require './acnihilator/selenium'
-require './acnihilator/whois'
-require './acnihilator/geoip'
+require_relative './adblock'
+require_relative './cookies'
+require_relative './selenium'
+require_relative './whois'
+require_relative './geoip'
 
 class Acnihilator
   class Analysis
@@ -21,11 +21,9 @@ class Acnihilator
     end
 
     def self.from_db(id)
-
     end
 
     def self.from_json(id)
-
     end
 
     def to_h
@@ -91,7 +89,7 @@ class Acnihilator
         @cookies.each do |cookie|
           name = cookie[:name]
           LOGGER.info "  #{name.colorize :blue}: #{cookie[:value]}"
-          entry     = Cookies[name]
+          entry     = COOKIES[name]
           category  = entry.fetch :category
           violation = category == 'Functional' ? :green : :red
           LOGGER.info "    #{category.colorize violation} #{entry.fetch(:entity).colorize :yellow} #{entry.fetch :description}"

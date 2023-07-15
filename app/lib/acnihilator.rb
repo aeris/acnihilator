@@ -11,8 +11,7 @@ require 'ostruct'
 class Acnihilator
   LOGGER = Logger.new STDOUT, level: Logger::INFO,
                       formatter:     proc { |*_, msg| msg + "\n" }
-
-  DNS      = 'ns0.fdn.fr'
+  DNS    = 'ns0.fdn.fr'
 
   def LOGGER.process(text)
     self.info (text + '…').colorize :yellow
@@ -25,4 +24,4 @@ class Acnihilator
   end
 end
 
-require './acnihilator/analysis'
+require './app/lib/acnihilator/analysis'
