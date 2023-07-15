@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require 'bundler/setup'
 require 'thor'
 require 'uri'
 require 'mongoid'
@@ -27,12 +28,12 @@ class Acnihilator
         data = analysis.to_h
         case options[:format].to_sym
         when :text
-          url        = data.fetch :url
+          url = data.fetch :url
           screenshot = data.delete :screenshot
-          host       = URI.parse(url).host.to_s
-          hash       = Digest::SHA2.hexdigest url
-          basename   = "#{host}-#{hash}"
-          json       = JSON.pretty_generate data
+          host = URI.parse(url).host.to_s
+          hash = Digest::SHA2.hexdigest url
+          basename = "#{host}-#{hash}"
+          json = JSON.pretty_generate data
           File.write File.join("reports", "#{basename}.json"), json
           File.write File.join("reports", "#{basename}.png"), screenshot
           puts "Report ID: #{basename}"
@@ -48,7 +49,7 @@ class Acnihilator
 
     def case(url)
       analysis = Analysis::Mongoid.find_by url: url
-      case_    = Case.new analysis
+      case_ = Case.new analysis
       puts case_.to_s
     end
   end
